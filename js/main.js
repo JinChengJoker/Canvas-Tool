@@ -5,21 +5,11 @@ var startPoint = {
     x: undefined,
     y: undefined
 }
-var endPoint = {
-    x: undefined,
-    y: undefined
-}
 
-var clientWidth = document.documentElement.clientWidth
-var clientHeight = document.documentElement.clientHeight
-canvas.width = clientWidth
-canvas.height = clientHeight
+resizeCanvas()
 
 window.onresize = function() {
-    var clientWidth = document.documentElement.clientWidth
-    var clientHeight = document.documentElement.clientHeight
-    canvas.width = clientWidth
-    canvas.height = clientHeight
+    resizeCanvas()
 }
 
 // 鼠标按下
@@ -29,8 +19,7 @@ canvas.onmousedown = function(e) {
     var y = e.clientY
     startPoint.x = x
     startPoint.y = y
-    ctx.fillStyle = "red"
-    ctx.fillRect(x-3, y-3, 6, 6)
+    drawArc(x, y, 2, 0, Math.PI*2)
 }
 
 // 鼠标移动
@@ -38,13 +27,7 @@ canvas.onmousemove = function(e) {
     if(mouseDown) {
         var x = e.clientX
         var y = e.clientY
-        ctx.lineWidth = 5
-        ctx.strokeStyle = "red"
-        ctx.beginPath()
-        ctx.moveTo(startPoint.x, startPoint.y)
-        ctx.lineTo(x, y)
-        ctx.closePath()
-        ctx.stroke()
+        drwaLine(startPoint.x, startPoint.y, x, y)
         startPoint.x = x
         startPoint.y = y
     }
@@ -53,4 +36,28 @@ canvas.onmousemove = function(e) {
 // 鼠标松开
 canvas.onmouseup = function(e) {
     mouseDown = false
+}
+
+function resizeCanvas() {
+    var clientWidth = document.documentElement.clientWidth
+    var clientHeight = document.documentElement.clientHeight
+    canvas.width = clientWidth
+    canvas.height = clientHeight
+}
+
+function drawArc(x, y, r, start, end) {
+    ctx.fillStyle = "red"
+    ctx.beginPath()
+    ctx.arc(x, y, r, start, end)
+    ctx.fill()
+}
+
+function drwaLine(startX, startY, endX, endY) {
+    ctx.lineWidth = 4
+    ctx.strokeStyle = "red"
+    ctx.beginPath()
+    ctx.moveTo(startX, startY)
+    ctx.lineTo(endX, endY)
+    ctx.closePath()
+    ctx.stroke()
 }
