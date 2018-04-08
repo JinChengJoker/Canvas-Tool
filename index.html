@@ -5,13 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Canvas Tool</title>
+    <style type="text/css">
+        .icon {
+           width: 1em; 
+           height: 1em;
+           vertical-align: -0.15em;
+           fill: currentColor;
+           overflow: hidden;
+        }
+    </style>
     <link rel="stylesheet" href="./css/style.css">
+    <script src="//at.alicdn.com/t/font_620145_ur2p0niqhapgmn29.js"></script>
 </head>
 <body>
     <canvas id="canvas"></canvas>
     <div class="btns">
-        <button id="pen" disabled>画笔</button>
-        <button id="eraser">橡皮檫</button>
+        <svg id="pen" class="icon active" aria-hidden="true">
+            <use xlink:href="#icon-pen-tool"></use>
+        </svg>
+        <svg id="eraser" class="icon" aria-hidden="true">
+            <use xlink:href="#icon-eraser"></use>
+        </svg>
+        <svg id="clear" class="icon" aria-hidden="true">
+            <use xlink:href="#icon-ava_clear"></use>
+        </svg>
     </div>
     <script src="./js/main.js"></script>
 </body>

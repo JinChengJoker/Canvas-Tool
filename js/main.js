@@ -9,22 +9,31 @@ var startPoint = {  // 两点连线的初始坐标
     y: undefined
 }
 
-pen.onclick = function() {
-    isEraser = false
-    this.disabled = true
-    eraser.disabled = false
-}
-eraser.onclick = function() {
-    isEraser = true
-    this.disabled = true
-    pen.disabled = false
-}
-
+// 调整canvas尺寸
 resizeCanvas()
-
 window.onresize = function() {
     resizeCanvas()
 }
+
+pen.onclick = function() {
+    pen.classList.add('active')
+    eraser.classList.remove('active')
+    isEraser = false
+}
+eraser.onclick = function() {
+    pen.classList.remove('active')
+    eraser.classList.add('active')
+    isEraser = true
+}
+clear.onclick = function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    pen.classList.add('active')
+    eraser.classList.remove('active')
+    isEraser = false
+}
+
+ctx.fillStyle = "red"
+ctx.strokeStyle = "red"
 
 // 特性检测
 if(document.body.ontouchstart === undefined) {
@@ -102,7 +111,6 @@ function updateStartPoint(newX, newY) {
 }
 
 function drawArc(x, y, r, start, end) {
-    ctx.fillStyle = "red"
     ctx.beginPath()
     ctx.arc(x, y, r, start, end)
     ctx.fill()
@@ -110,7 +118,6 @@ function drawArc(x, y, r, start, end) {
 
 function drawLine(startX, startY, endX, endY) {
     ctx.lineWidth = 4
-    ctx.strokeStyle = "red"
     ctx.beginPath()
     ctx.moveTo(startX, startY)
     ctx.lineTo(endX, endY)
