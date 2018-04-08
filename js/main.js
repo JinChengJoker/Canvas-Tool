@@ -1,39 +1,20 @@
 var canvas = document.getElementById('canvas')
 var ctx = canvas.getContext('2d')
-var pen = document.getElementById('pen')
-var eraser = document.getElementById('eraser')
-var userDown = false  // 鼠标/手指是否按下
+var mouseDown = false  // 鼠标是否按下
 var isEraser = false  // 是否是橡皮擦模式
 var startPoint = {  // 两点连线的初始坐标
     x: undefined,
     y: undefined
 }
 
-// 调整canvas尺寸
-resizeCanvas()
+// 重置canvas
+resetCanvas()
 window.onresize = function() {
-    resizeCanvas()
+    resetCanvas()
 }
 
-pen.onclick = function() {
-    pen.classList.add('active')
-    eraser.classList.remove('active')
-    isEraser = false
-}
-eraser.onclick = function() {
-    pen.classList.remove('active')
-    eraser.classList.add('active')
-    isEraser = true
-}
-clear.onclick = function() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    pen.classList.add('active')
-    eraser.classList.remove('active')
-    isEraser = false
-}
-
-ctx.fillStyle = "red"
-ctx.strokeStyle = "red"
+// 监听用户操作
+listenUser()
 
 // 特性检测
 if(document.body.ontouchstart === undefined) {
@@ -41,12 +22,12 @@ if(document.body.ontouchstart === undefined) {
 
     // 鼠标按下
     canvas.onmousedown = function(e) {
-        userDown = true
+        mouseDown = true
         var x = e.clientX
         var y = e.clientY
         updateStartPoint(x, y)
         if(isEraser) {
-            ctx.clearRect(x-15, y-15, 30, 30)
+            ctx.clearRect(x-10, y-10, 20, 20)
         } else {
             drawArc(x, y, 2, 0, Math.PI*2)
         }
@@ -54,11 +35,11 @@ if(document.body.ontouchstart === undefined) {
 
     // 鼠标移动
     canvas.onmousemove = function(e) {
-        if(userDown) {
+        if(mouseDown) {
             var x = e.clientX
             var y = e.clientY
             if(isEraser) {
-                ctx.clearRect(x-15, y-15, 30, 30)
+                ctx.clearRect(x-10, y-10, 20, 20)
             } else {
                 drawLine(startPoint.x, startPoint.y, x, y)
                 updateStartPoint(x, y)
@@ -68,7 +49,7 @@ if(document.body.ontouchstart === undefined) {
 
     // 鼠标松开
     canvas.onmouseup = function() {
-        userDown = false
+        mouseDown = false
     }
 } else {
     // 支持触屏
@@ -79,7 +60,7 @@ if(document.body.ontouchstart === undefined) {
         var y = e.touches[0].clientY
         updateStartPoint(x, y)
         if(isEraser) {
-            ctx.clearRect(x-15, y-15, 30, 30)
+            ctx.clearRect(x-10, y-10, 20, 20)
         } else {
             drawArc(x, y, 2, 0, Math.PI*2)
         }
@@ -90,7 +71,7 @@ if(document.body.ontouchstart === undefined) {
         var x = e.touches[0].clientX
         var y = e.touches[0].clientY
         if(isEraser) {
-            ctx.clearRect(x-15, y-15, 30, 30)
+            ctx.clearRect(x-10, y-10, 20, 20)
         } else {
             drawLine(startPoint.x, startPoint.y, x, y)
             updateStartPoint(x, y)
@@ -98,11 +79,48 @@ if(document.body.ontouchstart === undefined) {
     }
 }
 
-function resizeCanvas() {
+// 函数封装
+function resetCanvas() {
     var clientWidth = document.documentElement.clientWidth
     var clientHeight = document.documentElement.clientHeight
     canvas.width = clientWidth
     canvas.height = clientHeight
+    ctx.fillStyle = 'white'
+    ctx.fillRect(0, 0, clientWidth, clientHeight)
+    ctx.fillStyle = "red"
+    ctx.strokeStyle = "red"
+}
+
+function listenUser() {
+    var pen = document.getElementById('pen')
+    var eraser = document.getElementById('eraser')
+    var clear = document.getElementById('clear')
+    var download = document.getElementById('download')
+    pen.onclick = function() {
+        pen.classList.add('active')
+        eraser.classList.remove('active')
+        isEraser = false
+    }
+    eraser.onclick = function() {
+        pen.classList.remove('active')
+        eraser.classList.add('active')
+        isEraser = true
+    }
+    clear.onclick = function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        pen.classList.add('active')
+        eraser.classList.remove('active')
+        isEraser = false
+    }
+    download.onclick = function(){
+        var url = canvas.toDataURL('image/png')
+        var a = document.createElement('a')
+        a.href = url
+        a.download = 'canvas'
+        a.target = '_blank'
+        document.body.appendChild(a)
+        a.click()
+    }
 }
 
 function updateStartPoint(newX, newY) {

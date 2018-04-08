@@ -14,12 +14,20 @@
     left: 20px;
     top: 20px;
 }
+.btns.btns-right {
+    left: unset;
+    right: 20px;
+    top: 20px;
+}
 .btns>svg {
     width: 2em;
     height: 2em;
     margin: 5px;
     transition: all 0.3s;
 }
+.btns>svg:hover {
+    cursor: pointer;
+}
 .btns>svg.active {
-    transform: scale(1.2);
+    transform: scale(1.3);
 }
